@@ -1,9 +1,9 @@
 import { exec } from 'node:child_process'
-import { readFileSync } from 'node:fs'
 import { promisify } from 'node:util'
 import { eventHandler, fromNodeMiddleware } from 'h3'
 import { defineNitroPlugin, useNitroApp, useRuntimeConfig } from 'nitropack/runtime'
 import { joinURL } from 'ufo'
+import '@directus/api/cli/run'
 
 export default defineNitroPlugin(() => {
    initialize()
