@@ -1,2 +1,4 @@
 [functions]
-  node_bundler = "none"
+included_files = [
+  "node_modules/@directus/api/**"
+]
