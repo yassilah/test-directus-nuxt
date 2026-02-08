@@ -1,9 +1,8 @@
-import { exec } from 'node:child_process'
-import { promisify } from 'node:util'
+import { createRequire } from 'node:module'
+import { execa } from 'execa'
 import { eventHandler, fromNodeMiddleware } from 'h3'
 import { defineNitroPlugin, useNitroApp, useRuntimeConfig } from 'nitropack/runtime'
 import { joinURL } from 'ufo'
-import '@directus/api/cli/run'
 
 export default defineNitroPlugin(() => {
    initialize()
@@ -14,11 +13,12 @@ export default defineNitroPlugin(() => {
  */
 async function initialize() {
    const nitro = useNitroApp()
-   const { admus: { configPath, cliPath, accessToken, typesPath }, public: { apiPath, apiUrl } } = useRuntimeConfig()
+   const { admus: { configPath, accessToken, typesPath }, public: { apiPath, apiUrl } } = useRuntimeConfig()
 
    process.env.CONFIG_PATH = configPath
-
-   await promisify(exec)(`node ${cliPath} bootstrap`)
+   const require = createRequire(import.meta.url)
+   const cliPath = require.resolve('@directus/api/cli/run.js')
+   await execa('node', [cliPath, 'bootstrap'])
    const { createApp } = await import('@directus/api')
    const app = await createApp()
    const handler = fromNodeMiddleware(app)

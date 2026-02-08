@@ -44,6 +44,7 @@
       "@yassidev/nuxt-directus": "catalog:",
       "defu": "catalog:",
       "directus-sdk-typegen": "catalog:",
+      "execa": "catalog:",
       "jiti": "catalog:",
       "ufo": "catalog:"
    },

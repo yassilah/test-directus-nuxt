@@ -1,6 +1,6 @@
 import { randomBytes } from 'node:crypto'
 import { fileURLToPath } from 'node:url'
-import { addImports, addServerPlugin, addTemplate, addTypeTemplate, defineNuxtModule, resolveModule, updateRuntimeConfig } from '@nuxt/kit'
+import { addImports, addServerPlugin, addTemplate, addTypeTemplate, defineNuxtModule, updateRuntimeConfig } from '@nuxt/kit'
 import { defu } from 'defu'
 import { joinURL } from 'ufo'
 
@@ -58,9 +58,8 @@ export default defineNuxtModule<ModuleOptions>({
       updateRuntimeConfig({
          admus: {
             configPath,
-            cliPath: resolveModule('@directus/api/cli/run.js'),
-            accessToken: options.config.ADMIN_TOKEN || '',
             typesPath,
+            accessToken: options.config.ADMIN_TOKEN || '',
          },
          public: {
             apiPath: options.apiPath,
