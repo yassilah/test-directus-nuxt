@@ -1,13 +1,24 @@
 import { exec } from 'node:child_process'
+import { readFileSync } from 'node:fs'
 import { promisify } from 'node:util'
 import { eventHandler, fromNodeMiddleware } from 'h3'
-import { defineNitroPlugin, useRuntimeConfig } from 'nitropack/runtime'
+import { defineNitroPlugin, useNitroApp, useRuntimeConfig } from 'nitropack/runtime'
 import { joinURL } from 'ufo'
 
-export default defineNitroPlugin(async (nitro) => {
+export default defineNitroPlugin(() => {
+   initialize()
+})
+
+/**
+ * Initializes the Directus API and sets up the Nitro route to handle API requests
+ */
+async function initialize() {
+   const nitro = useNitroApp()
    const { admus: { configPath, cliPath, accessToken, typesPath }, public: { apiPath, apiUrl } } = useRuntimeConfig()
 
    process.env.CONFIG_PATH = configPath
+
+   console.log('CONFIG', readFileSync(configPath, 'utf-8'))
 
    const execPromise = promisify(exec)
    await execPromise(`node ${cliPath} bootstrap`)
@@ -31,7 +42,7 @@ export default defineNitroPlugin(async (nitro) => {
          directusToken: accessToken,
       })
    }
-})
+}
 
 async function waitForDirectus(url: string, retries = 10, delay = 3000): Promise<void> {
    for (let i = 0; i < retries; i++) {
