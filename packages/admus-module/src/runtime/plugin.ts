@@ -1,4 +1,3 @@
-import { createRequire } from 'node:module'
 import { execa } from 'execa'
 import { eventHandler, fromNodeMiddleware } from 'h3'
 import { defineNitroPlugin, useNitroApp, useRuntimeConfig } from 'nitropack/runtime'
@@ -13,11 +12,9 @@ export default defineNitroPlugin(() => {
  */
 async function initialize() {
    const nitro = useNitroApp()
-   const { admus: { configPath, accessToken, typesPath }, public: { apiPath, apiUrl } } = useRuntimeConfig()
+   const { admus: { cliPath, configPath, accessToken, typesPath }, public: { apiPath, apiUrl } } = useRuntimeConfig()
 
    process.env.CONFIG_PATH = configPath
-   const require = createRequire(import.meta.url)
-   const cliPath = require.resolve('@directus/api/cli/run.js')
    await execa('node', [cliPath, 'bootstrap'])
    const { createApp } = await import('@directus/api')
    const app = await createApp()

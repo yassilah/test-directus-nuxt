@@ -59,12 +59,17 @@ export default defineNuxtModule<ModuleOptions>({
          admus: {
             configPath,
             typesPath,
+            cliPath: fileURLToPath(import.meta.resolve('@directus/api/cli/run.js')),
             accessToken: options.config.ADMIN_TOKEN || '',
          },
          public: {
             apiPath: options.apiPath,
             apiUrl: joinURL('http://localhost:3000', options.apiPath),
          },
+      })
+
+      nuxt.options.nitro.externals = defu(nuxt.options.nitro.externals, {
+         external: ['@directus/api', '@directus/sdk', 'directus-sdk-typegen', configPath],
       })
    },
 })
