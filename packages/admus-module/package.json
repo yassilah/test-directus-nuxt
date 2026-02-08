@@ -1,0 +1,62 @@
+{
+   "name": "@admus/nuxt-module",
+   "type": "module",
+   "version": "1.0.0",
+   "description": "My new Nuxt module",
+   "license": "MIT",
+   "repository": "your-org/my-module",
+   "exports": {
+      ".": {
+         "types": "./dist/types.d.mts",
+         "import": "./dist/module.mjs"
+      }
+   },
+   "main": "./dist/module.mjs",
+   "typesVersions": {
+      "*": {
+         ".": [
+            "./dist/types.d.mts"
+         ]
+      }
+   },
+   "files": [
+      "dist"
+   ],
+   "workspaces": [
+      "playground"
+   ],
+   "scripts": {
+      "prepack": "nuxt-module-build build",
+      "prepare": "nuxt-module-build prepare",
+      "dev": "nuxt-module-build build --stub",
+      "build": "npm run prepare && nuxt-module-build build",
+      "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
+      "lint": "eslint .",
+      "test": "vitest run",
+      "test:watch": "vitest watch",
+      "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
+   },
+   "dependencies": {
+      "@directus/api": "catalog:",
+      "@directus/sdk": "catalog:",
+      "@nuxt/kit": "catalog:",
+      "@yassidev/nuxt-directus": "catalog:",
+      "defu": "catalog:",
+      "directus-sdk-typegen": "catalog:",
+      "ufo": "catalog:"
+   },
+   "devDependencies": {
+      "@nuxt/devtools": "catalog:",
+      "@nuxt/eslint-config": "catalog:",
+      "@nuxt/module-builder": "catalog:",
+      "@nuxt/schema": "catalog:",
+      "@nuxt/test-utils": "catalog:",
+      "@types/node": "catalog:",
+      "changelogen": "catalog:",
+      "eslint": "catalog:",
+      "nuxt": "catalog:",
+      "typescript": "catalog:",
+      "vitest": "catalog:",
+      "vue-tsc": "catalog:"
+   }
+}

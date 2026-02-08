@@ -1,0 +1,17 @@
+{
+   "name": "admus",
+   "version": "1.0.0",
+   "packageManager": "pnpm@10.27.0",
+   "description": "Admus is a custom interface for Directus, built as a Nuxt 4 layer.",
+   "author": "Yasser Lahbibi <yasser.lahbibi@etik.com>",
+   "license": "MIT",
+   "keywords": [],
+   "scripts": {
+      "lint:fix": "eslint --fix .",
+      "dev": "pnpm --filter admus dev"
+   },
+   "devDependencies": {
+      "@apenhet/eslint-config": "catalog:",
+      "eslint": "catalog:"
+   }
+}

@@ -1,0 +1,58 @@
+packages:
+  - packages/*
+
+catalog:
+  '@apenhet/eslint-config': ^2.12.8
+  '@directus/api': ^33.1.1
+  '@directus/sdk': ^21.1.0
+  '@iconify-json/lucide': ^1.2.87
+  '@iconify-json/simple-icons': ^1.2.68
+  '@nuxt/a11y': 1.0.0-alpha.1
+  '@nuxt/devtools': ^3.1.1
+  '@nuxt/eslint-config': ^1.13.0
+  '@nuxt/hints': 1.0.0-alpha.6
+  '@nuxt/image': 2.0.0
+  '@nuxt/kit': ^4.3.0
+  '@nuxt/module-builder': ^1.0.2
+  '@nuxt/schema': ^4.3.0
+  '@nuxt/scripts': 0.13.2
+  '@nuxt/test-utils': 4.0.0
+  '@nuxt/ui': ^4.4.0
+  '@nuxtjs/i18n': 10.2.3
+  '@rollup/rollup-darwin-arm64': ^4.57.1
+  '@types/node': latest
+  '@yassidev/nuxt-directus': ^0.0.18
+  changelogen: ^0.6.2
+  defu: ^6.1.4
+  directus-sdk-typegen: ^0.2.1
+  eslint: ^9.39.2
+  nuxt: ^4.3.0
+  rollup: ^4.57.1
+  tailwindcss: ^4.1.18
+  typescript: ^5.9.3
+  ufo: ^1.6.3
+  vitest: ^4.0.18
+  vue-tsc: ^3.2.4
+  zod: ^4.3.6
+
+catalogMode: strict
+
+catalogs:
+  conflicts_@nuxt/test-utils_h3_23_0:
+    '@nuxt/test-utils': ^3.23.0
+  conflicts_typescript_t5_9_3:
+    typescript: ~5.9.3
+
+ignoredBuiltDependencies:
+  - '@parcel/watcher'
+  - '@tailwindcss/oxide'
+  - esbuild
+  - unrs-resolver
+  - vue-demi
+
+onlyBuiltDependencies:
+  - argon2
+  - isolated-vm
+  - oracledb
+  - sharp
+  - sqlite3
