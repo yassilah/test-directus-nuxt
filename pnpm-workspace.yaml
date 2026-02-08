@@ -26,6 +26,7 @@ catalog:
   defu: ^6.1.4
   directus-sdk-typegen: ^0.2.1
   eslint: ^9.39.2
+  jiti: ^2.6.1
   nuxt: ^4.3.0
   rollup: ^4.57.1
   tailwindcss: ^4.1.18

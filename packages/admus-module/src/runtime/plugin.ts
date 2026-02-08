@@ -18,10 +18,7 @@ async function initialize() {
 
    process.env.CONFIG_PATH = configPath
 
-   console.log('CONFIG', readFileSync(configPath, 'utf-8'))
-
-   const execPromise = promisify(exec)
-   await execPromise(`node ${cliPath} bootstrap`)
+   await promisify(exec)(`node ${cliPath} bootstrap`)
    const { createApp } = await import('@directus/api')
    const app = await createApp()
    const handler = fromNodeMiddleware(app)
