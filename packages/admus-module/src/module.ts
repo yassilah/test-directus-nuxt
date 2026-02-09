@@ -1,7 +1,9 @@
 import { randomBytes } from 'node:crypto'
+import { cpSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { useEnv } from '@directus/env'
-import { addImports, addServerPlugin, addTypeTemplate, defineNuxtModule, updateRuntimeConfig } from '@nuxt/kit'
+import { addImports, addServerPlugin, addTypeTemplate, defineNuxtModule, resolveModule, updateRuntimeConfig } from '@nuxt/kit'
 import defu from 'defu'
 import { joinURL } from 'ufo'
 import { getTypesContent } from './helpers/types'
@@ -36,8 +38,14 @@ export default defineNuxtModule<ModuleOptions>({
          await bootstrapDirectus()
       }
 
-      nuxt.options.nitro.externals = defu(nuxt.options.nitro.externals, {
-         trace: false, // Necessary to keep directus api database seeds yaml files
+      nuxt.hook('nitro:init', (nitro) => {
+         nitro.hooks.hook('compiled', () => {
+            cpSync(
+               resolve(resolveModule('@directus/api'), '../database/seeds'),
+               joinURL(nitro.options.output.serverDir, 'node_modules/@directus/api/dist/database/seeds'),
+               { recursive: true },
+            )
+         })
       })
 
       const { dst } = addTypeTemplate({
