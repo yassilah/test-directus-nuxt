@@ -1,7 +1,6 @@
 import { randomBytes } from 'node:crypto'
-import { fileURLToPath } from 'node:url'
 import { useEnv } from '@directus/env'
-import { addImports, addServerPlugin, addTypeTemplate, defineNuxtModule, updateRuntimeConfig } from '@nuxt/kit'
+import { addImports, addServerPlugin, addTypeTemplate, createResolver, defineNuxtModule, updateRuntimeConfig } from '@nuxt/kit'
 import defu from 'defu'
 import { joinURL } from 'ufo'
 import { copyDatabaseSeedsAfterBuild } from './helpers/seeds'
@@ -37,6 +36,8 @@ export default defineNuxtModule<ModuleOptions>({
          await bootstrapDirectus()
       }
 
+      const { resolve } = createResolver(import.meta.url)
+
       const { dst } = addTypeTemplate({
          filename: 'admus/types.d.ts',
          getContents: nuxt.options.dev ? getTypesContent : () => 'export type DirectusSchema = {}',
@@ -53,11 +54,11 @@ export default defineNuxtModule<ModuleOptions>({
          },
       })
 
-      addServerPlugin(fileURLToPath(import.meta.resolve('./runtime/serve')))
+      addServerPlugin(resolve('./runtime/serve'))
 
       addImports({
          name: 'useDirectus',
-         from: fileURLToPath(import.meta.resolve('./runtime/useDirectus')),
+         from: resolve('./runtime/useDirectus'),
       })
 
       nuxt.options.alias = defu(nuxt.options.alias, {
