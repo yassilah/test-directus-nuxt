@@ -6,6 +6,7 @@ import { useEnv } from '@directus/env'
 import { addImports, addServerPlugin, addTypeTemplate, defineNuxtModule, resolveModule, updateRuntimeConfig } from '@nuxt/kit'
 import defu from 'defu'
 import { joinURL } from 'ufo'
+import { copyDatabaseSeedsAfterBuild } from './helpers/seeds'
 import { getTypesContent } from './helpers/types'
 import { bootstrapDirectus } from './runtime/bootstrap'
 
@@ -38,16 +39,6 @@ export default defineNuxtModule<ModuleOptions>({
          await bootstrapDirectus()
       }
 
-      nuxt.hook('nitro:init', (nitro) => {
-         nitro.hooks.hook('compiled', () => {
-            cpSync(
-               resolve(resolveModule('@directus/api'), '../database/seeds'),
-               joinURL(nitro.options.output.serverDir, 'node_modules/@directus/api/dist/database/seeds'),
-               { recursive: true },
-            )
-         })
-      })
-
       const { dst } = addTypeTemplate({
          filename: 'admus/types.d.ts',
          getContents: nuxt.options.dev ? getTypesContent : () => 'export type DirectusSchema = {}',
@@ -76,5 +67,7 @@ export default defineNuxtModule<ModuleOptions>({
       })
 
       nuxt.options.typescript.hoist.push('@directus/sdk')
+
+      copyDatabaseSeedsAfterBuild(nuxt)
    },
 })
