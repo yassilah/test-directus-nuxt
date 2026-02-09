@@ -28,7 +28,6 @@
    "scripts": {
       "prepack": "nuxt-module-build build",
       "prepare": "nuxt-module-build prepare",
-      "postinstall": "npm run build",
       "dev": "nuxt-module-build build --stub",
       "build": "npm run prepare && nuxt-module-build build",
       "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
@@ -39,13 +38,12 @@
    },
    "dependencies": {
       "@directus/api": "catalog:",
+      "@directus/env": "catalog:",
       "@directus/sdk": "catalog:",
+      "@ikerin/directus-typegen": "catalog:",
       "@nuxt/kit": "catalog:",
       "@yassidev/nuxt-directus": "catalog:",
       "defu": "catalog:",
-      "directus-sdk-typegen": "catalog:",
-      "execa": "catalog:",
-      "jiti": "catalog:",
       "ufo": "catalog:"
    },
    "devDependencies": {

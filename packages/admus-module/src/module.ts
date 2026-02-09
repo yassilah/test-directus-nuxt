@@ -1,8 +1,11 @@
 import { randomBytes } from 'node:crypto'
 import { fileURLToPath } from 'node:url'
-import { addImports, addServerPlugin, addTemplate, addTypeTemplate, defineNuxtModule, updateRuntimeConfig } from '@nuxt/kit'
-import { defu } from 'defu'
+import { useEnv } from '@directus/env'
+import { addImports, addServerPlugin, addTypeTemplate, defineNuxtModule, updateRuntimeConfig } from '@nuxt/kit'
+import defu from 'defu'
 import { joinURL } from 'ufo'
+import { getTypesContent } from './helpers/types'
+import { bootstrapDirectus } from './runtime/bootstrap'
 
 export interface ModuleOptions {
    apiPath: string
@@ -24,42 +27,27 @@ export default defineNuxtModule<ModuleOptions>({
          ADMIN_TOKEN: process.env.ADMIN_TOKEN || 'admin-token',
          ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'admin@example.com',
          ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || 'password',
+         SERVE_APP: false,
       },
    }),
    async setup(options, nuxt) {
-      nuxt.options.typescript.hoist.push('@directus/sdk')
+      if (nuxt.options.dev) {
+         Object.assign(useEnv(), options.config)
+         await bootstrapDirectus()
+      }
 
-      const { dst: configPath } = addTemplate({
-         filename: 'admus/directus-config.json',
-         write: true,
-         getContents: () => JSON.stringify({
-            ...options.config,
-            SERVE_APP: false,
-            PUBLIC_URL: 'http://localhost:3000',
-         }),
+      nuxt.options.nitro.externals = defu(nuxt.options.nitro.externals, {
+         trace: false, // Necessary to keep directus api database seeds yaml files
       })
 
-      addImports({
-         name: 'useDirectus',
-         from: fileURLToPath(import.meta.resolve('./runtime/useDirectus')),
+      const { dst } = addTypeTemplate({
+         filename: 'admus/types.d.ts',
+         getContents: nuxt.options.dev ? getTypesContent : () => 'export type DirectusSchema = {}',
       })
-
-      nuxt.options.alias = defu(nuxt.options.alias, {
-         '#directus/types': './directus/types.d.ts',
-      })
-
-      const { dst: typesPath } = addTypeTemplate({
-         filename: 'directus/types.d.ts',
-         getContents: () => `export type Schema = {}`,
-      })
-
-      addServerPlugin(fileURLToPath(import.meta.resolve('./runtime/plugin')))
 
       updateRuntimeConfig({
          admus: {
-            configPath,
-            typesPath,
-            cliPath: fileURLToPath(import.meta.resolve('@directus/api/cli/run.js')),
+            config: options.config,
             accessToken: options.config.ADMIN_TOKEN || '',
          },
          public: {
@@ -68,8 +56,17 @@ export default defineNuxtModule<ModuleOptions>({
          },
       })
 
-      nuxt.options.nitro.externals = defu(nuxt.options.nitro.externals, {
-         external: ['@directus/api', '@directus/sdk', 'directus-sdk-typegen', configPath],
+      addServerPlugin(fileURLToPath(import.meta.resolve('./runtime/serve')))
+
+      addImports({
+         name: 'useDirectus',
+         from: fileURLToPath(import.meta.resolve('./runtime/useDirectus')),
       })
+
+      nuxt.options.alias = defu(nuxt.options.alias, {
+         '#admus/types': dst,
+      })
+
+      nuxt.options.typescript.hoist.push('@directus/sdk')
    },
 })

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { readItems } from '@directus/sdk'
+
 const { user, logout } = useAuth()
 </script>
 
