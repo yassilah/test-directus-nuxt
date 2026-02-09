@@ -27,6 +27,7 @@
    ],
    "scripts": {
       "prepack": "nuxt-module-build build",
+      "postinstall": "npm run build",
       "prepare": "nuxt-module-build prepare",
       "dev": "nuxt-module-build build --stub",
       "build": "npm run prepare && nuxt-module-build build",
