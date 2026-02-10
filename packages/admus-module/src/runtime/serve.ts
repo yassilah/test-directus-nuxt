@@ -4,7 +4,6 @@ import { defineNitroPlugin, useRuntimeConfig } from 'nitropack/runtime'
 import { joinURL, withLeadingSlash } from 'ufo'
 
 let app: Awaited<ReturnType<typeof getDirectusApp>> | undefined
-
 /**
  * Cached app instance.
  */
@@ -29,23 +28,44 @@ export default defineNitroPlugin(async (nitro) => {
  * In AWS Lambda/Netlify Functions, the response object doesn't have headers properly initialized.
  */
 function patchResponseForServerless(res: ServerResponse) {
-   // Ensure _headers is initialized
+   const ensureHeaders = (target: ServerResponse) => {
+      // @ts-expect-error - accessing internal property
+      if (!target._headers) {
+         // @ts-expect-error - setting internal property
+         target._headers = {}
+      }
+   }
+
    if (!res.getHeaders || typeof res.getHeaders !== 'function') {
-      res.getHeaders = () => ({})
+      res.getHeaders = () => {
+         ensureHeaders(res)
+         // @ts-expect-error - accessing internal property
+         return res._headers
+      }
    }
 
    const originalGetHeader = res.getHeader?.bind(res)
    res.getHeader = function (name: string) {
       try {
-         // @ts-expect-error - accessing internal property
-         if (!this._headers) {
-            // @ts-expect-error - setting internal property
-            this._headers = {}
-         }
+         ensureHeaders(this)
          return originalGetHeader ? originalGetHeader(name) : undefined
       }
       catch {
          return undefined
+      }
+   }
+
+   const originalSetHeader = res.setHeader?.bind(res)
+   res.setHeader = function (name: string, value: number | string | readonly string[]) {
+      try {
+         ensureHeaders(this)
+         // @ts-expect-error - accessing internal property
+         this._headers[String(name).toLowerCase()] = value
+         if (originalSetHeader) originalSetHeader(name, value)
+         return this as ServerResponse
+      }
+      catch {
+         return this as ServerResponse
       }
    }
 }
