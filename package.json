@@ -13,5 +13,8 @@
    "devDependencies": {
       "@apenhet/eslint-config": "catalog:",
       "eslint": "catalog:"
+   },
+   "dependencies": {
+      "@rollup/rollup-linux-x64-gnu": "catalog:"
    }
 }

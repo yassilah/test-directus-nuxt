@@ -21,6 +21,7 @@ catalog:
   '@nuxt/test-utils': 4.0.0
   '@nuxt/ui': ^4.4.0
   '@nuxtjs/i18n': 10.2.3
+  '@rollup/rollup-linux-x64-gnu': ^4.57.1
   '@types/node': latest
   '@yassidev/nuxt-directus': ^0.0.18
   changelogen: ^0.6.2
