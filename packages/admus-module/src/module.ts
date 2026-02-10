@@ -33,7 +33,7 @@ export default defineNuxtModule<ModuleOptions>({
    async setup(options, nuxt) {
       if (!nuxt.options._prepare) {
          Object.assign(useEnv(), options.config)
-         await bootstrapDirectus()
+         await bootstrapDirectus(nuxt)
       }
 
       const { resolve } = createResolver(import.meta.url)
