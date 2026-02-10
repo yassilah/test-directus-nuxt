@@ -1,9 +1,9 @@
 import { randomBytes } from 'node:crypto'
+import { createRequire } from 'node:module'
 import { useEnv } from '@directus/env'
 import { addImports, addServerPlugin, addTypeTemplate, createResolver, defineNuxtModule, updateRuntimeConfig } from '@nuxt/kit'
 import defu from 'defu'
 import { joinURL } from 'ufo'
-import { copyDatabaseSeedsAfterBuild } from './helpers/seeds'
 import { getTypesContent } from './helpers/types'
 import { bootstrapDirectus } from './runtime/bootstrap'
 
@@ -67,6 +67,12 @@ export default defineNuxtModule<ModuleOptions>({
 
       nuxt.options.typescript.hoist.push('@directus/sdk')
 
-      copyDatabaseSeedsAfterBuild(nuxt)
+      nuxt.hook('nitro:config', (config) => {
+         const require = createRequire(import.meta.url)
+         const modulePath = require.resolve('@rollup/rollup-linux-x64-gnu')
+         config.externals = defu(config.externals, {
+            traceInclude: [modulePath],
+         })
+      })
    },
 })

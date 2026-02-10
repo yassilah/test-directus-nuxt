@@ -43,6 +43,7 @@
       "@directus/sdk": "catalog:",
       "@ikerin/directus-typegen": "catalog:",
       "@nuxt/kit": "catalog:",
+      "@rollup/rollup-linux-x64-gnu": "catalog:",
       "@yassidev/nuxt-directus": "catalog:",
       "defu": "catalog:",
       "ufo": "catalog:"
