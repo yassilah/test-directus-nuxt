@@ -13,10 +13,4 @@ export default defineNuxtConfig({
    css: ['~/assets/css/main.css'],
 
    compatibilityDate: '2025-01-15',
-
-   nitro: {
-      rollupConfig: {
-         external: ['@rollup/rollup-linux-x64-gnu'],
-      },
-   },
 })
