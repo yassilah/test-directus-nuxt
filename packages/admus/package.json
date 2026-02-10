@@ -22,7 +22,6 @@
       "@nuxt/test-utils": "catalog:",
       "@nuxt/ui": "catalog:",
       "@nuxtjs/i18n": "catalog:",
-      "@rollup/rollup-linux-x64-gnu": "catalog:",
       "nuxt": "catalog:",
       "rollup": "catalog:",
       "tailwindcss": "catalog:"
