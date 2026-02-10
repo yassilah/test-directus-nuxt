@@ -1,7 +1,7 @@
 import { randomBytes } from 'node:crypto'
 import { createRequire } from 'node:module'
 import { useEnv } from '@directus/env'
-import { addImports, addServerPlugin, addTypeTemplate, createResolver, defineNuxtModule, updateRuntimeConfig } from '@nuxt/kit'
+import { addImports, addServerHandler, addTypeTemplate, createResolver, defineNuxtModule, updateRuntimeConfig } from '@nuxt/kit'
 import defu from 'defu'
 import { joinURL } from 'ufo'
 import { getTypesContent } from './helpers/types'
@@ -54,7 +54,10 @@ export default defineNuxtModule<ModuleOptions>({
          },
       })
 
-      addServerPlugin(resolve('./runtime/serve'))
+      addServerHandler({
+         route: joinURL('/', options.apiPath, '**'),
+         handler: resolve('./runtime/serve'),
+      })
 
       addImports({
          name: 'useDirectus',
