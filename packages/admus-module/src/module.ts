@@ -50,7 +50,7 @@ export default defineNuxtModule<ModuleOptions>({
          },
          public: {
             apiPath: options.apiPath,
-            apiUrl: joinURL('http://localhost:3000', options.apiPath),
+            apiUrl: joinURL(process.env.DEPLOY_URL || 'http://localhost:3000', options.apiPath),
          },
       })
 
