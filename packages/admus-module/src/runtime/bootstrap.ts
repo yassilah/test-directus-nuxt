@@ -17,7 +17,7 @@ export async function bootstrapDirectus(nuxt: Nuxt) {
    db.client.destroy = () => null as never
    process.exit = () => null as never
 
-   nuxt.hook('close', () => {
+   nuxt.hooks.hookOnce('close', () => {
       db.client.destroy()
    })
 
