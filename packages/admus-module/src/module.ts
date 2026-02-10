@@ -31,7 +31,7 @@ export default defineNuxtModule<ModuleOptions>({
       },
    }),
    async setup(options, nuxt) {
-      if (nuxt.options.dev) {
+      if (!nuxt.options._prepare) {
          Object.assign(useEnv(), options.config)
          await bootstrapDirectus()
       }
@@ -50,7 +50,7 @@ export default defineNuxtModule<ModuleOptions>({
          },
          public: {
             apiPath: options.apiPath,
-            apiUrl: joinURL(process.env.DEPLOY_URL || 'http://localhost:3000', options.apiPath),
+            apiUrl: joinURL(process.env.URL || 'http://localhost:3000', options.apiPath),
          },
       })
 

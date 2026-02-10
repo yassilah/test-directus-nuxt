@@ -59,10 +59,5 @@ async function getDirectusApp() {
    const { config } = useRuntimeConfig().admus
    Object.assign(useEnv(), config)
 
-   if (!import.meta.dev) {
-      const { bootstrapDirectus } = await import('./bootstrap')
-      await bootstrapDirectus()
-   }
-
    return fromNodeMiddleware(await createApp())
 }
