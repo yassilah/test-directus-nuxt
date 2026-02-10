@@ -1,3 +1,4 @@
+import type { ServerResponse } from 'node:http'
 import { eventHandler, fromNodeMiddleware } from 'h3'
 import { defineNitroPlugin, useRuntimeConfig } from 'nitropack/runtime'
 import { joinURL, withLeadingSlash } from 'ufo'
@@ -15,9 +16,39 @@ export default defineNitroPlugin(async (nitro) => {
    nitro.router.add(withLeadingSlash(joinURL(apiPath, '**')), eventHandler((event) => {
       event.node.req.url = event.node.req.url?.replace(withLeadingSlash(apiPath), '')
       if (!event.node.req.url || !app) return
+
+      // Ensure headers are initialized for serverless environments
+      patchResponseForServerless(event.node.res)
+
       return app(event)
    }))
 })
+
+/**
+ * Patch ServerResponse to ensure headers work in serverless environments.
+ * In AWS Lambda/Netlify Functions, the response object doesn't have headers properly initialized.
+ */
+function patchResponseForServerless(res: ServerResponse) {
+   // Ensure _headers is initialized
+   if (!res.getHeaders || typeof res.getHeaders !== 'function') {
+      res.getHeaders = () => ({})
+   }
+
+   const originalGetHeader = res.getHeader?.bind(res)
+   res.getHeader = function (name: string) {
+      try {
+         // @ts-expect-error - accessing internal property
+         if (!this._headers) {
+            // @ts-expect-error - setting internal property
+            this._headers = {}
+         }
+         return originalGetHeader ? originalGetHeader(name) : undefined
+      }
+      catch {
+         return undefined
+      }
+   }
+}
 
 /**
  * Returns the Directus API app wrapped as an H3 event handler. Initializes the app if it hasn't been created yet.
